@@ -234,6 +234,14 @@ minute     => 45
 second     => 56
 offset     => 36000
 
+[time zone as numeric offset with colon]
+%H:%M:%S %zc
+23:45:56 +10:00
+hour       => 23
+minute     => 45
+second     => 56
+offset     => 36000
+
 [time zone as abbreviation]
 %H:%M:%S %Z
 23:45:56 AEST

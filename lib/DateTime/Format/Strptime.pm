@@ -429,6 +429,10 @@ sub _build_parser {
             regex => qr/[+-]$d{4}/,
             field => 'time_zone_offset',
         },
+        zc => {
+            regex => qr/[+-]$d{2}:$d{2}/,
+            field => 'time_zone_offset_colon',
+        },
         Z => {
             regex => qr/[a-zA-Z]{1,6}|[\-\+][0-9]{2}/,
             field => 'time_zone_abbreviation',
@@ -555,6 +559,7 @@ sub _token_re_for {
         time_zone_abbreviation
         time_zone_name
         time_zone_offset
+        time_zone_offset_colon
         week_mon_1
         week_sun_0
         year_100
@@ -609,6 +614,14 @@ sub _token_re_for {
         if ( $args->{time_zone_offset} ) {
             $args->{time_zone} = DateTime::TimeZone->new(
                 name => $args->{time_zone_offset} );
+        }
+
+        if ( $args->{time_zone_offset_colon} ) {
+            (my $time_zone_offset = $args->{time_zone_offset_colon}) =~ s/://;
+            warn "TZO: $time_zone_offset\n";
+
+            $args->{time_zone} = DateTime::TimeZone->new(
+                name => $time_zone_offset );
         }
 
         if ( defined $args->{time_zone_abbreviation} ) {
@@ -1310,6 +1323,11 @@ The weekday number (0-6) with Sunday = 0.
 
 The week number with Monday the first day of the week (0-53). The first
 Monday of January is the first day of week 1.
+
+=item * %x
+
+An RFC-822/ISO 8601 like standard time zone specification separating hour and
+minute by a colon. (For example +11:00)
 
 =item * %y
 
